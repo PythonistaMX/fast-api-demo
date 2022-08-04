@@ -1,7 +1,7 @@
 
 from pydantic import BaseModel, Field, PositiveInt
 from typing import Optional, Literal
-from .data import CARRERAS
+from data import CARRERAS
 
 
 class SchemaAlumno(BaseModel):
