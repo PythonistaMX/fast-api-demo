@@ -23,7 +23,7 @@ class SchemaAlumnoIn(BaseModel):
     primer_apellido: str
     segundo_apellido: str = ''
     carrera: Literal[tuple(CARRERAS)]
-    semestre: PositiveInt
+    semestre: PositiveInt(ge=1)
     promedio: float = Field(ge=0, le=10)
     al_corriente: bool
         

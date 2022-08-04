@@ -38,8 +38,8 @@ def get_alumno(cuenta, db: Session = Depends(get_db)):
 def delete_alumno(cuenta, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
-        crud.baja_alumno(db=db, alumno=alumno)
-        return {status_code:201, detail:"OK"}
+        crud.baja_alumno(db=db, alumno=alumno, response_model={'message': str})
+        return {'message':"OK"}
     else:
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
 
