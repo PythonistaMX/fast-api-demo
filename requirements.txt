@@ -1,8 +1,6 @@
 fastapi
 SQLAlchemy
 uvicorn
-fastapi-users[sqlalchemy2]
-typer
 requests
 alembic
 pytest

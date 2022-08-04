@@ -1,8 +1,7 @@
 
-from fastapi_users import models
 from pydantic import BaseModel, Field, PositiveInt
 from typing import Optional, Literal
-from data import CARRERAS
+from .data import CARRERAS
 
 
 class SchemaAlumno(BaseModel):
@@ -30,19 +29,3 @@ class SchemaAlumnoIn(BaseModel):
         
     class Config:
         orm_mode = True
-
-
-class User(models.BaseUser):
-    pass
-
-
-class UserCreate(models.BaseUserCreate):
-    pass
-
-
-class UserUpdate(models.BaseUserUpdate):
-    pass
-
-
-class UserDB(User, models.BaseUserDB):
-    pass
