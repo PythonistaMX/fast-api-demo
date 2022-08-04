@@ -1,10 +1,8 @@
-from os import environ
+from os import getenv
 
-if environ.get('ENVIRNMENT') == "PROD":
-    SQLALCHEMY_DATABASE_URL = 'oracle:///'
+ENVIRONMENT = getenv('ENV')
 
-
-if environ.get('GAE_ENV'):
-    SQLALCHEMY_DATABASE_URL = 'sqlite:///'
+if  getenv('GAE_ENV') == 'standard':
+    SQLALCHEMY_DATABASE_URL = 'sqlite:///:memory:'
 else:
     SQLALCHEMY_DATABASE_URL = 'sqlite:///db.sqlite3'

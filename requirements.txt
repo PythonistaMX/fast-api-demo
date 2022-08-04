@@ -1,8 +1,12 @@
+sqlalchemy[asyncio]
 fastapi
-SQLAlchemy
 uvicorn
 requests
-alembic
 pytest
-tox
 coverage
+tox
+alembic
+gunicorn
+psycopg2
+asyncpg
+
