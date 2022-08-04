@@ -1,5 +1,5 @@
 
-from pydantic import BaseModel, Field, PositiveInt
+from pydantic import BaseModel, Field
 from typing import Optional, Literal
 from data import CARRERAS
 
@@ -10,7 +10,7 @@ class SchemaAlumno(BaseModel):
     primer_apellido: str
     segundo_apellido: str = ''
     carrera: Literal[tuple(CARRERAS)]
-    semestre: PositiveInt
+    semestre: int(ge=1)
     promedio: float = Field(ge=0, le=10)
     al_corriente: bool
         
@@ -23,7 +23,7 @@ class SchemaAlumnoIn(BaseModel):
     primer_apellido: str
     segundo_apellido: str = ''
     carrera: Literal[tuple(CARRERAS)]
-    semestre: PositiveInt(ge=1)
+    semestre: int(ge=1)
     promedio: float = Field(ge=0, le=10)
     al_corriente: bool
         
