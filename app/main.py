@@ -1,13 +1,19 @@
 from typing import List
 from fastapi import FastAPI, Depends
 from fastapi.exceptions import HTTPException
+from h11 import Data
 from sqlalchemy.orm import Session
 from . import crud
 from . import models
 from . import schemas
 from .db import SessionLocal, engine
+from .models import Alumno
+from data import DATOS_PRUEBA
 
-models.Base.metadata.create_all(bind=engine)
+import logging
+import settings
+
+logging.basicConfig(filename='myapp.log', level=logging.INFO)
 
 app = FastAPI()
 
@@ -17,6 +23,20 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@app.on_event("startup")
+def startup_event():
+    db = SessionLocal()
+    models.Base.metadata.create_all(bind=engine)
+    logging.info(" Base iniciada.")
+    if settings.TESTING:
+        if len(db.query(Alumno).filter(Alumno.cuenta).all()) == 0:
+            logging.info(" Ingresando datos de prueba.")
+            for alumno in DATOS_PRUEBA:
+                db.add(Alumno(**alumno))
+            db.commit()
+        else:
+           logging.info(" Ya existen datos en la tabla.") 
 
 
 @app.get("/api/", response_model=List[schemas.SchemaAlumno])
