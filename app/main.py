@@ -1,7 +1,6 @@
 from typing import List
 from fastapi import FastAPI, Depends
 from fastapi.exceptions import HTTPException
-from h11 import Data
 from sqlalchemy.orm import Session
 from . import crud
 from . import models
@@ -17,7 +16,7 @@ logging.basicConfig(filename='myapp.log', level=logging.INFO)
 
 app = FastAPI()
 
-def get_db():
+async def get_db():
     db = SessionLocal()
     try:
         yield db
@@ -25,7 +24,7 @@ def get_db():
         db.close()
 
 @app.on_event("startup")
-def startup_event():
+async def startup_event():
     db = SessionLocal()
     models.Base.metadata.create_all(bind=engine)
     logging.info(" Base iniciada.")
@@ -40,13 +39,13 @@ def startup_event():
 
 
 @app.get("/api/", response_model=List[schemas.SchemaAlumno])
-def vuelca_base(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def vuelca_base(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     alumnos = crud.consulta_alumnos(db, skip=skip, limit=limit)
     return alumnos
 
 
 @app.get("/api/{cuenta}", response_model=schemas.SchemaAlumno)
-def get_alumno(cuenta, db: Session = Depends(get_db)):
+async def get_alumno(cuenta, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         return alumno
@@ -55,7 +54,7 @@ def get_alumno(cuenta, db: Session = Depends(get_db)):
 
         
 @app.delete("/api/{cuenta}")
-def delete_alumno(cuenta, db: Session = Depends(get_db)):
+async def delete_alumno(cuenta, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         crud.baja_alumno(db=db, alumno=alumno)
@@ -65,7 +64,7 @@ def delete_alumno(cuenta, db: Session = Depends(get_db)):
 
         
 @app.post("/api/{cuenta}", response_model=schemas.SchemaAlumno)
-def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
+async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         raise HTTPException(status_code=409, detail="Recurso existente")
@@ -73,7 +72,7 @@ def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends
         
         
 @app.put("/api/{cuenta}", response_model=schemas.SchemaAlumno)
-def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
+async def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         crud.baja_alumno(db=db, alumno=alumno)
