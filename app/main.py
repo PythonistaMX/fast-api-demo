@@ -16,7 +16,7 @@ logging.basicConfig(filename='myapp.log', level=logging.INFO)
 
 app = FastAPI()
 
-async def get_db():
+def get_db():
     db = SessionLocal()
     try:
         yield db
@@ -24,7 +24,7 @@ async def get_db():
         db.close()
 
 @app.on_event("startup")
-async def startup_event():
+def startup_event():
     db = SessionLocal()
     models.Base.metadata.create_all(bind=engine)
     logging.info(" Base iniciada.")
@@ -39,13 +39,13 @@ async def startup_event():
 
 
 @app.get("/api/", response_model=List[schemas.SchemaAlumno])
-async def vuelca_base(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def vuelca_base(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     alumnos = crud.consulta_alumnos(db, skip=skip, limit=limit)
     return alumnos
 
 
 @app.get("/api/{cuenta}", response_model=schemas.SchemaAlumno)
-async def get_alumno(cuenta, db: Session = Depends(get_db)):
+def get_alumno(cuenta, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         return alumno
@@ -54,7 +54,7 @@ async def get_alumno(cuenta, db: Session = Depends(get_db)):
 
         
 @app.delete("/api/{cuenta}")
-async def delete_alumno(cuenta, db: Session = Depends(get_db)):
+def delete_alumno(cuenta, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         crud.baja_alumno(db=db, alumno=alumno)
@@ -64,7 +64,7 @@ async def delete_alumno(cuenta, db: Session = Depends(get_db)):
 
         
 @app.post("/api/{cuenta}", response_model=schemas.SchemaAlumno)
-async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
+def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         raise HTTPException(status_code=409, detail="Recurso existente")
@@ -72,7 +72,7 @@ async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = D
         
         
 @app.put("/api/{cuenta}", response_model=schemas.SchemaAlumno)
-async def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
+def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn, db: Session = Depends(get_db)):
     alumno = crud.consulta_alumno(db=db, cuenta=cuenta)
     if alumno:
         crud.baja_alumno(db=db, alumno=alumno)
