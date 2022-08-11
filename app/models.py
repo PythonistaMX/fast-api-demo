@@ -1,14 +1,16 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean
-from .db import Base
+import sqlalchemy as sa
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
 
 class Alumno(Base):
     '''Modelo de alumnos.'''
     __tablename__ = 'alumnos'
-    cuenta = Column(Integer, primary_key=True)
-    nombre = Column(String(50))
-    primer_apellido = Column(String(50))
-    segundo_apellido = Column(String(50))
-    carrera = Column(String(50))
-    semestre = Column(Integer)
-    promedio = Column(Float)
-    al_corriente = Column(Boolean)
+    cuenta = sa.Column(sa.Integer, primary_key=True)
+    nombre = sa.Column(sa.String(50))
+    primer_apellido = sa.Column(sa.String(50))
+    segundo_apellido = sa.Column(sa.String(50))
+    carrera = sa.Column(sa.String(50))
+    semestre = sa.Column(sa.Integer)
+    promedio = sa.Column(sa.Float)
+    al_corriente = sa.Column(sa.Boolean)

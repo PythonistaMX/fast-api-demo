@@ -3,10 +3,9 @@ from fastapi import FastAPI, Depends
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 from . import crud
-from . import models
 from . import schemas
-from .db import SessionLocal, engine
-from .models import Alumno
+from .db import get_db, engine
+from .models import Base
 from data import DATOS_PRUEBA
 
 import logging
@@ -16,26 +15,16 @@ logging.basicConfig(filename='myapp.log', level=logging.INFO)
 
 app = FastAPI()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 @app.on_event("startup")
-def startup_event():
-    db = SessionLocal()
-    models.Base.metadata.create_all(bind=engine)
+async def startup_event():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all) 
     logging.info(" Base iniciada.")
     if settings.TESTING:
-        if len(db.query(Alumno).filter(Alumno.cuenta).all()) == 0:
-            logging.info(" Ingresando datos de prueba.")
-            for alumno in DATOS_PRUEBA:
-                db.add(Alumno(**alumno))
-            db.commit()
-        else:
-           logging.info(" Ya existen datos en la tabla.") 
+        if len(await crud.consulta_alumnos(db=await get_db())) == 0:
+            print('Base vacía.')
+    else:
+        logging.info(" Ya existen datos en la tabla.") 
 
 
 @app.get("/api/", response_model=List[schemas.SchemaAlumno])
