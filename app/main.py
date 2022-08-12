@@ -49,7 +49,7 @@ async def get_alumno(cuenta, response_model=schemas.SchemaAlumno):
     else:
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
 
-        
+       
 @app.delete("/api/{cuenta:int}", status_code=201)
 async def delete_alumno(cuenta):
     alumno = await crud.consulta_alumno(db=session(), cuenta=cuenta)
