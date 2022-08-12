@@ -67,7 +67,8 @@ async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
     alumno = await crud.consulta_alumno(cuenta=cuenta)
     if alumno:
         raise HTTPException(status_code=409, detail="Recurso existente")
-    return await crud.alta_alumno(cuenta=cuenta, candidato=candidato)        
+    else:
+        return await crud.alta_alumno(cuenta=cuenta, candidato=dict(candidato))        
         
         
 @app.put("/api/{cuenta}", response_model=schemas.SchemaAlumno)
@@ -75,7 +76,7 @@ async def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
     alumno = await crud.consulta_alumno(cuenta=cuenta)
     if alumno:
         await crud.baja_alumno(cuenta=cuenta)
-        return await crud.alta_alumno(cuenta=cuenta, candidato=candidato)
+        return await crud.alta_alumno(cuenta=cuenta, candidato=dict(candidato))
     else:
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
     

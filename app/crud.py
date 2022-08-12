@@ -8,8 +8,9 @@ async def consulta_alumnos():
 
 
 async def consulta_alumno(cuenta: int):
-    query = tabla_alumnos.select(values={"cuenta": cuenta})
-    return await database.fetch_one(query=query)
+    query = "SELECT * FROM alumnos WHERE cuenta = :cuenta"
+    values = {'cuenta': cuenta}
+    return await database.fetch_one(query=query, values=values)
 
 
 async def alta_alumno(cuenta: int, candidato: schemas.SchemaAlumnoIn):
@@ -20,6 +21,6 @@ async def alta_alumno(cuenta: int, candidato: schemas.SchemaAlumnoIn):
 
 
 async def baja_alumno(cuenta):
-    query = tabla_alumnos.delete()
-    await database.execute(query=query, values={"cuenta": cuenta})
+    query = tabla_alumnos.delete().where(tabla_alumnos.c.cuenta == cuenta)
+    await database.execute(query=query)
     return True
