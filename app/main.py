@@ -1,7 +1,6 @@
 from typing import List
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
-from sqlalchemy.orm import Session
 from . import crud
 from . import schemas
 from .db import engine, session
