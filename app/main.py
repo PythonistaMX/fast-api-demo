@@ -7,7 +7,6 @@ from . import schemas
 from .db import engine, session
 from .models import Base
 from data import DATOS_PRUEBA
-
 import logging
 import settings
 
@@ -42,7 +41,7 @@ async def vuelca_base():
     return alumnos
 
 
-@app.get("/api/{cuenta}")
+@app.get("/api/{cuenta:int}")
 async def get_alumno(cuenta, response_model=schemas.SchemaAlumno):
     alumno = await crud.consulta_alumno(db=session(), cuenta=cuenta)
     if alumno:
@@ -51,7 +50,7 @@ async def get_alumno(cuenta, response_model=schemas.SchemaAlumno):
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
 
         
-@app.delete("/api/{cuenta}", status_code=201)
+@app.delete("/api/{cuenta:int}", status_code=201)
 async def delete_alumno(cuenta):
     alumno = await crud.consulta_alumno(db=session(), cuenta=cuenta)
     if alumno:
@@ -61,7 +60,7 @@ async def delete_alumno(cuenta):
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
 
         
-@app.post("/api/{cuenta}", response_model=schemas.SchemaAlumno)
+@app.post("/api/{cuenta:int}", response_model=schemas.SchemaAlumno)
 async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
     alumno = await crud.consulta_alumno(db=session(), cuenta=cuenta)
     if alumno:
@@ -69,7 +68,7 @@ async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
     return await crud.alta_alumno(db=session(), cuenta=cuenta, candidato=candidato)        
         
         
-@app.put("/api/{cuenta}", response_model=schemas.SchemaAlumno)
+@app.put("/api/{cuenta:int}", response_model=schemas.SchemaAlumno)
 async def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
     alumno = await crud.consulta_alumno(db=session(), cuenta=cuenta)
     if alumno:
@@ -77,5 +76,3 @@ async def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
         return await crud.alta_alumno(db=session(), cuenta=cuenta, candidato=candidato)
     else:
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
-    
-    
