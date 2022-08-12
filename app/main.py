@@ -44,7 +44,7 @@ async def vuelca_base():
 
 
 @app.get("/api/{cuenta}")
-async def get_alumno(cuenta, response_model=schemas.SchemaAlumno):
+async def get_alumno(cuenta:int, response_model=schemas.SchemaAlumno):
     alumno = await crud.consulta_alumno(cuenta=cuenta)
     if alumno:
         return alumno
@@ -52,7 +52,7 @@ async def get_alumno(cuenta, response_model=schemas.SchemaAlumno):
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
 
         
-@app.delete("/api/{cuenta}", status_code=201)
+@app.delete("/api/{cuenta:int}", status_code=201)
 async def delete_alumno(cuenta):
     alumno = await crud.consulta_alumno(cuenta=cuenta)
     if alumno:
@@ -62,7 +62,7 @@ async def delete_alumno(cuenta):
         raise HTTPException(status_code=404, detail="Recurso no encontrado")
 
         
-@app.post("/api/{cuenta}", response_model=schemas.SchemaAlumno)
+@app.post("/api/{cuenta:int}", response_model=schemas.SchemaAlumno)
 async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
     alumno = await crud.consulta_alumno(cuenta=cuenta)
     if alumno:
@@ -71,7 +71,7 @@ async def post_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
         return await crud.alta_alumno(cuenta=cuenta, candidato=dict(candidato))        
         
         
-@app.put("/api/{cuenta}", response_model=schemas.SchemaAlumno)
+@app.put("/api/{cuenta:int}", response_model=schemas.SchemaAlumno)
 async def put_alumno(cuenta, candidato: schemas.SchemaAlumnoIn):
     alumno = await crud.consulta_alumno(cuenta=cuenta)
     if alumno:

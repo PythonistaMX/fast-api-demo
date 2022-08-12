@@ -18,6 +18,6 @@ tabla_alumnos = sa.Table(
                         sa.Column('promedio', sa.Float),
                         sa.Column('al_corriente', sa.Boolean))
 
-engine = sa.create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = sa.create_engine(SQLALCHEMY_DATABASE_URL)
 
 metadata.create_all(engine)
