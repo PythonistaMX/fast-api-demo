@@ -1,6 +1,6 @@
 
 from pydantic import BaseModel, Field, PositiveInt
-from typing import Optional, Literal
+from typing import Literal
 from data import CARRERAS
 
 
@@ -14,9 +14,6 @@ class SchemaAlumno(BaseModel):
     promedio: float = Field(ge=0, le=10)
     al_corriente: bool
         
-    class Config:
-        orm_mode = True
-        
 
 class SchemaAlumnoIn(BaseModel):
     nombre: str
@@ -26,6 +23,3 @@ class SchemaAlumnoIn(BaseModel):
     semestre: PositiveInt
     promedio: float = Field(ge=0, le=10)
     al_corriente: bool
-        
-    class Config:
-        orm_mode = True
