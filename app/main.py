@@ -6,6 +6,7 @@ from . import schemas
 from .db import engine, session
 from .models import Base
 from data import DATOS_PRUEBA
+from sqlalchemy import func
 import logging
 import settings
 

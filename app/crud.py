@@ -1,21 +1,24 @@
 from sqlalchemy.orm import Session
 from .models import Alumno
-from . import schemas
+from .schemas import SchemaAlumnoIn
 import sqlalchemy as sa
+
 
 async def consulta_alumnos(db: Session):
     async with db.begin():
-        results = await db.execute(sa.select(Alumno))
+        stmnt = sa.select(Alumno)
+        results = await db.execute(stmnt)
         return results.scalars().all()
 
 
 async def consulta_alumno(db: Session, cuenta: int):
     async with db.begin():
-        results = await db.execute(sa.select(Alumno).where(Alumno.cuenta == cuenta))
+        stmnt = sa.select(Alumno).where(Alumno.cuenta == cuenta)
+        results = await db.execute(stmnt)
         return results.scalars().first()
 
 
-async def alta_alumno(db: Session, cuenta: int, candidato: schemas.SchemaAlumnoIn):
+async def alta_alumno(db: Session, cuenta: int, candidato: SchemaAlumnoIn):
     alumno = Alumno(cuenta=cuenta, **dict(candidato))
     async with db.begin():
         db.add(alumno)
