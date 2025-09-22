@@ -7,6 +7,5 @@ coverage
 tox
 alembic
 gunicorn
-pg8000
-asyncpg
 aiosqlite
+aiomysql
